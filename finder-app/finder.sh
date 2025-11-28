@@ -19,9 +19,7 @@ then
     exit 1
 fi
 
-result=$(grep -Hrn $2 $1/*)
-
-files_cnt=$(echo "$result" | cut -d : -f 1 | uniq | wc -l)
-lines_cnt=$(echo "$result" | cut -d : -f-2 | uniq | wc -l)
+files_cnt=$(grep -Hrn $2 $1/* | cut -d : -f 1 | uniq | wc -l)
+lines_cnt=$(grep -Hrn $2 $1/* | cut -d : -f-2 | uniq | wc -l)
 
 echo "The number of files are $files_cnt and the number of matching lines are $lines_cnt"
