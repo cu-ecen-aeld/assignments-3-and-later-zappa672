@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 function print_usage {
     echo Usage: $0 filesdir searchstr
