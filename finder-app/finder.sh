@@ -23,3 +23,5 @@ files_cnt=$(grep -Hrn $2 $1/* | cut -d : -f 1 | uniq | wc -l)
 lines_cnt=$(grep -Hrn $2 $1/* | cut -d : -f-2 | uniq | wc -l)
 
 echo "The number of files are $files_cnt and the number of matching lines are $lines_cnt"
+
+echo "The number of files are $files_cnt and the number of matching lines are $lines_cnt" > /tmp/assignment4-result.txt
