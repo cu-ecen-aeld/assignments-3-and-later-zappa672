@@ -305,6 +305,7 @@ malloc_fail:
 void write_timestamp() {
     int r;
     time_t now;
+    ssize_t bufsz, nwrite;
     struct tm *local_tm; 
     char time_str[64];
     char write_buf[128];
@@ -333,7 +334,11 @@ void write_timestamp() {
     }
 
     lseek(ctx.store_fd, 0, SEEK_END);
-    write(ctx.store_fd, write_buf, strlen(write_buf));    
+    bufsz = strlen(write_buf);
+    nwrite = write(ctx.store_fd, write_buf, bufsz);    
+    if (nwrite != bufsz) {
+        syslog(LOG_WARNING, "written bytes %ld != %ld expected", nwrite, bufsz);
+    }
 
     r = pthread_mutex_unlock(&ctx.mtx_store);
     if (r) {
@@ -407,7 +412,7 @@ int main(int argc, char** argv) {
     ctx.conns = NULL;
 
     pthread_mutex_init(&ctx.mtx_store, NULL);
-    ctx.store_fd = open(STORE_PATH, O_RDWR | O_CREAT);
+    ctx.store_fd = open(STORE_PATH, O_RDWR | O_CREAT, 0600);
     if (ctx.store_fd == -1) {
         syslog(LOG_ERR, "Failed to open file %s", STORE_PATH);
         exit(EXIT_FAILURE);
